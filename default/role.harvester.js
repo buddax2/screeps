@@ -8,11 +8,11 @@ var harvesterModule = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
-        // If creep is dying it needs to deliver its energy before it passed away
-        if (creep.ticksToLive <= 10 && creep.carry.energy > 0) {
-            deliverEnergy(creep);
-            return;
-        }
+        // // If creep is dying it needs to deliver its energy before it passed away
+        // if (creep.ticksToLive <= 10 && creep.carry.energy > 0) {
+        //     deliverEnergy(creep);
+        //     return;
+        // }
         
         // Get all sources in this room
         var sources = creep.room.find(FIND_SOURCES).map(function(source){

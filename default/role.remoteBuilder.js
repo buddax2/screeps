@@ -3,11 +3,11 @@ var remoteBuilderModule = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
-        // If creep is dying it needs to deliver its energy before it passed away
-        if (creep.ticksToLive <= 20 && creep.carry.energy > 0) {
-            deliverEnergy(creep);
-            return;
-        }
+        // // If creep is dying it needs to deliver its energy before it passed away
+        // if (creep.ticksToLive <= 20 && creep.carry.energy > 0) {
+        //     deliverEnergy(creep);
+        //     return;
+        // }
 
 	    if(creep.memory.working && creep.carry.energy == 0) {
             creep.memory.working = false;
