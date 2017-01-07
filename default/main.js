@@ -102,20 +102,20 @@ function createCreeps(spawn, populationRoom) {
     let defenders = _.filter(Game.creeps, (creep) => creep.memory.role == Role.Defender && creep.memory.home == spawn.name);
     let remoteBuilders = _.filter(Game.creeps, (creep) => creep.memory.role == Role.RemoteBuilder && creep.memory.home == spawn.name);
 
-    if (harvesters.length > 0) console.log(sname + ' ' + 'Total harvesters:' + harvesters.length);
-    if (remoteHarvesters.length > 0) console.log(sname + ' ' + 'Total remote harvesters:' + remoteHarvesters.length);
-    if (transporters.length > 0) console.log(sname + ' ' + 'Total transporters:' + transporters.length);
-    if (upgraders.length > 0) console.log(sname + ' ' + 'Total upgraders:' + upgraders.length);
-    if (builders.length > 0) console.log(sname + ' ' + 'Total builders:' + builders.length);
-    if (repairers.length > 0) console.log(sname + ' ' + 'Total repairers:' + repairers.length);
-    if (roadRepairers.length > 0) console.log(sname + ' ' + 'Total road repairers:' + roadRepairers.length);
-    if (containerRepairers.length > 0) console.log(sname + ' ' + 'Total container repairers:' + containerRepairers.length);
-    if (troopers.length > 0) console.log(sname + ' ' + 'Total troopers:' + troopers.length);
-    if (tanks.length > 0) console.log(sname + ' ' + 'Total tanks:' + tanks.length);
-    if (claimers.length > 0) console.log(sname + ' ' + 'Total claimers:' + claimers.length);
-    if (truckers.length > 0) console.log(sname + ' ' + 'Total truckers:' + truckers.length);
-    if (defenders.length > 0) console.log(sname + ' ' + 'Total defenders:' + defenders.length);
-    if (remoteBuilders.length > 0) console.log(sname + ' ' + 'Total remote builders:' + remoteBuilders.length);
+    // if (harvesters.length > 0) console.log(sname + ' ' + 'Total harvesters:' + harvesters.length);
+    // if (remoteHarvesters.length > 0) console.log(sname + ' ' + 'Total remote harvesters:' + remoteHarvesters.length);
+    // if (transporters.length > 0) console.log(sname + ' ' + 'Total transporters:' + transporters.length);
+    // if (upgraders.length > 0) console.log(sname + ' ' + 'Total upgraders:' + upgraders.length);
+    // if (builders.length > 0) console.log(sname + ' ' + 'Total builders:' + builders.length);
+    // if (repairers.length > 0) console.log(sname + ' ' + 'Total repairers:' + repairers.length);
+    // if (roadRepairers.length > 0) console.log(sname + ' ' + 'Total road repairers:' + roadRepairers.length);
+    // if (containerRepairers.length > 0) console.log(sname + ' ' + 'Total container repairers:' + containerRepairers.length);
+    // if (troopers.length > 0) console.log(sname + ' ' + 'Total troopers:' + troopers.length);
+    // if (tanks.length > 0) console.log(sname + ' ' + 'Total tanks:' + tanks.length);
+    // if (claimers.length > 0) console.log(sname + ' ' + 'Total claimers:' + claimers.length);
+    // if (truckers.length > 0) console.log(sname + ' ' + 'Total truckers:' + truckers.length);
+    // if (defenders.length > 0) console.log(sname + ' ' + 'Total defenders:' + defenders.length);
+    // if (remoteBuilders.length > 0) console.log(sname + ' ' + 'Total remote builders:' + remoteBuilders.length);
 
     // Harvesters should have the most high priority while creating a new creep
     if (harvesters.length < Population[sname].Harvestes) {
@@ -241,7 +241,9 @@ function findAndPickupNearestDroppedResource(creep) {
     if (target) {
         if (creep.pos.getRangeTo(target.pos) < 5) {
             creep.moveTo(target);
-            creep.pickup(target);
+            if (creep.pickup(target) == 0) {
+                console.log(creep.name + ' just picked up ' + target.amaunt + ' energy')
+            }
         }
     }
 }
