@@ -180,7 +180,7 @@ function createCreeps(spawn, populationRoom) {
         let lightTank = spawn.createCreep([ATTACK, MOVE], undefined, {role: Role.Tank, home: spawn.name});
     }
     if (claimers.length < Population[sname].Claimers) {
-        let creep = spawn.createCreep([CLAIM, MOVE], undefined, {role: Role.Claimer, home: spawn.name});
+        let creep = spawn.createCreep([CLAIM, CLAIM, MOVE], undefined, {role: Role.Claimer, home: spawn.name});
     }
     if (defenders.length < Population[sname].Defenders) {
         let creep = spawn.createCreep([ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE], undefined, {role: Role.Defender, home: spawn.name});
