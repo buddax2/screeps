@@ -120,7 +120,8 @@ function createCreeps(spawn, populationRoom) {
     // Harvesters should have the most high priority while creating a new creep
     if (harvesters.length < Population[sname].Harvestes) {
         // let name = 'Harvester' + harvesterIndex++;
-        let creep = spawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE], undefined, {role: Role.Harvester, home: spawn.name});
+        // let creep = spawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE], undefined, {role: Role.Harvester, home: spawn.name});
+        let creep = spawn.createCreep([WORK, WORK, WORK, CARRY, MOVE], undefined, {role: Role.Harvester, home: spawn.name});
 
         // Create a small harvester
         // If there is not enough money for such big harvester
@@ -130,7 +131,7 @@ function createCreeps(spawn, populationRoom) {
     }
     if (transporters.length < Population[sname].Transporters) {
         // let name = 'Harvester' + harvesterIndex++;
-        let creep = spawn.createCreep([CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], undefined, {role: Role.Transporter, home: spawn.name});
+        let creep = spawn.createCreep([CARRY, MOVE], undefined, {role: Role.Transporter, home: spawn.name});
 
         // Create a small harvester
         // If there is not enough money for such big harvester
@@ -180,7 +181,7 @@ function createCreeps(spawn, populationRoom) {
         let lightTank = spawn.createCreep([ATTACK, MOVE], undefined, {role: Role.Tank, home: spawn.name});
     }
     if (claimers.length < Population[sname].Claimers) {
-        let creep = spawn.createCreep([CLAIM, CLAIM, MOVE], undefined, {role: Role.Claimer, home: spawn.name});
+        let creep = spawn.createCreep([CLAIM, MOVE], undefined, {role: Role.Claimer, home: spawn.name});
     }
     if (defenders.length < Population[sname].Defenders) {
         let creep = spawn.createCreep([ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE], undefined, {role: Role.Defender, home: spawn.name});

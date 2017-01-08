@@ -55,6 +55,17 @@ var harvesterModule = {
                 if(outcome == ERR_NOT_IN_RANGE) {
                     creep.moveTo(source);
                 }
+                else if (outcome == 0) {
+                    // Let's try to drop the harvested energy if a container is near
+                    var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy < structure.storeCapacity;
+                        }
+                    });
+                    if (container && creep.pos.getRangeTo(container.pos) < 2) {
+                        creep.transfer(container, RESOURCE_ENERGY);
+                    }
+                }
                 else if (outcome == ERR_NOT_ENOUGH_RESOURCES) {
                     creep.memory.working = false;
                     deliverEnergy(creep);
