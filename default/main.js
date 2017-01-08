@@ -242,7 +242,7 @@ function findAndPickupNearestDroppedResource(creep) {
         if (creep.pos.getRangeTo(target.pos) < 5) {
             creep.moveTo(target);
             if (creep.pickup(target) == 0) {
-                console.log(creep.name + ' just picked up ' + target.amaunt + ' energy')
+                console.log(creep.name + ' just picked up ' + target.amount + ' energy')
             }
         }
     }
