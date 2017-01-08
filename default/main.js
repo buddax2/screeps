@@ -32,7 +32,7 @@ let Population = {
         RemoteHarvesters: 4,
         Transporters: 3,
         Builders: 0,
-        RemoteBuilders: 2,
+        RemoteBuilders: 0,
         Upgraders: 5,
         Repairs: 0,
         RoadRepairs: 2,
@@ -46,7 +46,7 @@ let Population = {
     "Phobos": {
         Harvestes: 4,
         RemoteHarvesters: 0,
-        Transporters: 2,
+        Transporters: 1,
         Builders: 0,
         RemoteBuilders: 0,
         Upgraders: 2,
