@@ -23,6 +23,7 @@ var truckerModule = {
     //     }
     //   }
 
+
       if(creep.memory.working && creep.carry.energy == creep.carryCapacity) {
           creep.memory.working = false;
       }
@@ -32,22 +33,34 @@ var truckerModule = {
 
       if (creep.memory.working == true) {
           
-          if (Game.spawns.Phobos.room.name != creep.room.name) {
-            var exitDir = creep.room.findExitTo(Game.spawns.Phobos.room);
-            var exit = creep.pos.findClosestByRange(exitDir);
-            creep.moveTo(exit);
+          
+          if (creep.room.name != creep.memory.targetRoom) {
+              var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.targetRoom]);
+              var exit = creep.pos.findClosestByRange(exitDir);
+
+            if (!exit) {
+                let flag = Game.flags['waitingZone'];
+                if (flag) {
+                    creep.moveTo(flag);
+                }
+            }
+            else {
+                creep.moveTo(exit);
+            }
           }
           else {
             var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy > 1000;
+                    // return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy > 1000; //Fix this
+                    return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 1000; //Fix this
                 }
             });
 
             if (!container) {
                 container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy > 0;
+                        // return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy > 0;
+                        return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 0;
                     }
                 });
             }
@@ -61,10 +74,19 @@ var truckerModule = {
           }
       }
       else {
-        if (Game.spawns.MainBase.room.name != creep.room.name) {
-            var exitDir = creep.room.findExitTo(Game.spawns.MainBase.room);
+        if (creep.room.name != creep.memory.homeRoom) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.homeRoom]);
             var exit = creep.pos.findClosestByRange(exitDir);
-            creep.moveTo(exit);
+
+            if (!exit) {
+                let flag = Game.flags['waitingZone'];
+                if (flag) {
+                    creep.moveTo(flag);
+                }
+            }
+            else {
+                creep.moveTo(exit);
+            }
         }
         else {
             deliverEnergy(creep);
@@ -75,14 +97,50 @@ var truckerModule = {
 
 /** @param {Creep} creep **/
 function deliverEnergy(creep) {
-    var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy < structure.storeCapacity;
+
+    var container = undefined;
+    if (creep.memory.target) {
+        container = Game.getObjectById(creep.memory.target);
+    }
+    else {
+        container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_EXTENSION ||
+                    structure.structureType == STRUCTURE_SPAWN ||
+                    structure.structureType == STRUCTURE_TOWER) &&
+                    structure.energy < structure.energyCapacity;
+            }
+        });   
+        if (!container) {
+            container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return structure.structureType == STRUCTURE_STORAGE && structure.store.energy < structure.storeCapacity;
+                }
+            });
+            
+            if (creep.room.terminal) {
+                let distanceToTerminal = creep.pos.getRangeTo(creep.room.terminal);
+                let distanceToStorage = creep.pos.getRangeTo(container);
+                
+                if (distanceToTerminal < distanceToStorage) {
+                    container = creep.room.terminal;
+                }
+            }
         }
-    });
+    }
+
     if (container) {
-        if(creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        creep.memory.target = container.id;
+        let outcome = creep.transfer(container, RESOURCE_ENERGY);
+        if(outcome == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
+        }
+        else if (outcome == 0) {
+            console.log(creep.name + ' deleted targed: ' + creep.memory.target);
+            delete creep.memory.target;
+        }
+        else {
+            delete creep.memory.target;
         }
     }
 }

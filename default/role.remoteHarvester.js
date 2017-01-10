@@ -30,14 +30,25 @@ var remoteHarvesterModule = {
         let flag = Game.flags['RemoteHarvesting'];
         if (flag) {
             if (creep.pos.roomName === flag.pos.roomName) {
-              var target = creep.pos.findClosestByRange(FIND_SOURCES);
-              if (target) {
+                var target = creep.pos.findClosestByRange(FIND_SOURCES);
+                if (target) {
                 let outcome = creep.harvest(target);
 
                 if (outcome == ERR_NOT_IN_RANGE) {
-                  creep.moveTo(target);
+                    creep.moveTo(target);
                 }
-              }
+                else if (outcome == 0) {
+                    // Let's try to drop the harvested energy if a container is near
+                    var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy < structure.storeCapacity;
+                        }
+                    });
+                    if (container && creep.pos.isNearTo(container)) {
+                        creep.transfer(container, RESOURCE_ENERGY);
+                    }
+                }
+            }
               // var target = creep.pos.findClosestByRange(FIND_STRUCTURES,
 	            //    {filter: {structureType: STRUCTURE_CONTAINER}
               //  });

@@ -9,13 +9,18 @@ var upgraderModule = {
         //     return;
         // }
 
+        if (creep.room.name != creep.memory.targetRoom) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.targetRoom]);
+            var exit = creep.pos.findClosestByRange(exitDir);
+            creep.moveTo(exit);
+            return;
+        }
+
       if(creep.memory.upgrading && creep.carry.energy == 0) {
             creep.memory.upgrading = false;
-            creep.say('harvesting');
       }
       else if(!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
           creep.memory.upgrading = true;
-          creep.say('upgrading');
       }
 
       if (creep.memory.upgrading) {

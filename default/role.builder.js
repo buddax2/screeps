@@ -9,6 +9,13 @@ var builderModule = {
         //     return;
         // }
 
+        if (creep.room.name != creep.memory.targetRoom) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.targetRoom]);
+            var exit = creep.pos.findClosestByRange(exitDir);
+            creep.moveTo(exit);
+            return;
+        }
+
 	    if(creep.memory.working && creep.carry.energy == 0) {
             creep.memory.working = false;
 	    }
@@ -24,31 +31,16 @@ var builderModule = {
                     return structure.structureType == STRUCTURE_WALL;
                 }
             });
-          // if (walls.length > 0) {
-          //   if(creep.build(walls[0]) == ERR_NOT_IN_RANGE) {
-          //       creep.moveTo(walls[0]);
-          //   }
-          // }
             if(target) {
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
                 }
             }
-          // else if (targets.length > 0) {
-          //   if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-          //       creep.moveTo(targets[0]);
-          //   }
-          // }
             else {
                 creep.moveTo(19, 32);
             }
 	    }
 	    else {
-	        // var sources = creep.room.find(FIND_SOURCES);
-          // var nearestSource = creep.pos.findClosestByRange(FIND_SOURCES);
-          // if(creep.harvest(nearestSource) == ERR_NOT_IN_RANGE) {
-          //     creep.moveTo(nearestSource);
-          // }
             var containers = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy > creep.carryCapacity;
@@ -58,6 +50,18 @@ var builderModule = {
             if(containers.length > 0) {
                 if(creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(containers[0]);
+                }
+            }
+            else {
+                var target = creep.pos.findClosestByRange(FIND_SOURCES, {
+                    filter: (structure) => {
+                        return structure.energy > 0;
+                    }
+                });
+                if (target) {
+                    if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target);
+                    }
                 }
             }
 	    }

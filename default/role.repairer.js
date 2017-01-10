@@ -8,7 +8,7 @@ var repairerModule = {
         //     deliverEnergy(creep);
         //     return;
         // }
-
+        
       if(creep.memory.repairing && creep.carry.energy == 0) {
             creep.memory.repairing = false;
             creep.say('harvesting');
@@ -19,12 +19,28 @@ var repairerModule = {
       }
 
       if (creep.memory.repairing) {
+        if (creep.room.name != creep.memory.targetRoom) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.targetRoom]);
+            var exit = creep.pos.findClosestByRange(exitDir);
+            
+            if (!exit) {
+                let flag = Game.flags['waitingZone'];
+                if (flag) {
+                    creep.moveTo(flag);
+                }
+            }
+            else {
+                creep.moveTo(exit);
+            }
+        }
+        else {
             let structureType = creep.memory.structureType;
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return structure.structureType == structureType && structure.hits < structure.hitsMax;
                 }
             });
+
             if (target) {
                 if(creep.repair(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
@@ -44,9 +60,24 @@ var repairerModule = {
                     }
                 }
             }
-
+        }
       }
       else {
+        if (creep.room.name != creep.memory.targetRoom) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.targetRoom]);
+            var exit = creep.pos.findClosestByRange(exitDir);
+
+            if (!exit) {
+                let flag = Game.flags['waitingZone'];
+                if (flag) {
+                    creep.moveTo(flag);
+                }
+            }
+            else {
+                creep.moveTo(exit);
+            }
+        }
+        else {
           // var sources = creep.room.find(FIND_SOURCES);
           // var nearestSource = creep.pos.findClosestByRange(FIND_SOURCES);
           // if(creep.harvest(nearestSource) == ERR_NOT_IN_RANGE) {
@@ -54,7 +85,7 @@ var repairerModule = {
           // }
           var containers = creep.room.find(FIND_STRUCTURES, {
               filter: (structure) => {
-                  return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy > creep.carryCapacity;
+                  return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.energy > 0;
               }
           });
 
@@ -63,6 +94,19 @@ var repairerModule = {
                   creep.moveTo(containers[0]);
               }
           }
+          else {
+            var target = creep.pos.findClosestByRange(FIND_SOURCES, {
+                filter: (structure) => {
+                    return structure.energy > 0;
+                }
+            });
+            if (target) {
+                if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
+            }
+          }
+        }
       }
 	}
 }
